@@ -1,0 +1,17 @@
+Schemes:
+  father(name, son)
+Facts:
+  father('Alma', 'Alma').
+  father('Alma', 'Helaman').
+  father('Helaman', 'Helaman').
+  father('Helaman', 'Nephi').
+  father('Helaman', 'Lehi').
+  father('Nephi', 'Nephi').
+  father('Pahoran','Pahoran').
+  father('Pahoran','Paanchi').
+  father('Pahoran','Pacumeni').
+Rules:
+
+Queries:
+  father(same,same)?
+  father('Pahoran',kid)?
