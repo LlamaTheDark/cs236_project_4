@@ -8,11 +8,18 @@
 #include <set>
 #include <unordered_map>
 
+template<class T>
+struct ComparePointers{
+    bool operator()(const T *a, const T *b) const {
+        return *a < *b;
+    }
+};
+
 class Relation {
 private:
     std::string name;
     Header *header;
-    std::set<Tuple*> instances;
+    std::set<Tuple*, ComparePointers<Tuple>> instances;
 
     bool containsInstance(Tuple* instance);
 
