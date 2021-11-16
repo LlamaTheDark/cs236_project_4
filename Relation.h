@@ -50,8 +50,9 @@ public:
     /*
     Adds all instances of parameter `r` to the relation from which the function was called.
     @param r: A pointer to the relation whose instances will be added to this
+    @return a boolean saying whether any new tuples were added. true if tuple were added, false otherwise.
     */
-    void performUnion(Relation *r);
+    bool performUnion(Relation *r);
 
     /*
     Selects rows that contain a specific value for a given column
