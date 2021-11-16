@@ -14,7 +14,9 @@ void Relation::addInstance(Tuple *instance){
         std::cerr << "Failed to add instance; Tuple not the same size as header." << std::endl;
     }
 }
-void Relation::performUnion(Relation *r){
+bool Relation::performUnion(Relation *r){
+    bool result = false;
+
     std::ostringstream tupleStream;
     for(auto instance : *r){
         if(instances.insert(instance).second){ // true if new element inserted
@@ -22,8 +24,11 @@ void Relation::performUnion(Relation *r){
             tupleStream << std::endl;
             std::cout << tupleStream.str();
             tupleStream.clear();
+
+            result = true;
         }
     }
+    return result;
 }
 
 bool Relation::containsInstance(Tuple *instance){
@@ -106,7 +111,7 @@ Relation *Relation::join(Relation *rhs) const{
 
     // <index of second relation, index of first relation>
     std::unordered_map<int, int> commonSchema;
-    for(int indexLHS = 0; indexLHS < this->header->getLength(); indexLHS++){
+    for(unsigned int indexLHS = 0; indexLHS < this->header->getLength(); indexLHS++){
         int indexRHS = rhs->header->findAttribute(header->getAttribute(indexLHS));
         if(indexRHS != -1){ // if the attribute in `relation a` is also an attribute in `relation b`
             commonSchema[indexRHS] = indexLHS; // link them in the map.
@@ -114,7 +119,7 @@ Relation *Relation::join(Relation *rhs) const{
     }
 
     std::vector<int> uniqueIndices; // these are the indices of all unique columns in the RHS relation of the join
-    for(int i = 0; i < rhs->header->getLength(); i++){
+    for(unsigned int i = 0; i < rhs->header->getLength(); i++){
         if(!commonSchema.count(i)){
             uniqueIndices.push_back(i);
         }
@@ -154,7 +159,7 @@ bool Relation::canJoin(Relation *rhs, Tuple *t1, Tuple *t2, std::unordered_map<i
 }
 Tuple *Relation::joinTuples(Tuple *t1, Tuple *t2, std::vector<int> &t2Indices) {
     Tuple *result = new Tuple();
-    for(int i = 0; i < t1->getLength(); i++){
+    for(unsigned int i = 0; i < t1->getLength(); i++){
         result->addValue(t1->getValue(i));
     }
     for(int i : t2Indices){
@@ -164,7 +169,7 @@ Tuple *Relation::joinTuples(Tuple *t1, Tuple *t2, std::vector<int> &t2Indices) {
 }
 Header *Relation::joinHeaders(Header *h1, Header *h2, std::vector<int> &h2Indices){
     Header *result = new Header();
-    for(int i = 0; i < h1->getLength(); i++){
+    for(unsigned int i = 0; i < h1->getLength(); i++){
         result->addAttribute(h1->getAttribute(i)); // we add everything from our current relation
     }
     for(auto i : h2Indices){
@@ -184,43 +189,13 @@ std::string Relation::toString() const {
     }
 
     /*
-    If you're reading this, you've found the part of the code that sorts the
-    set that is supposed to sort itself (supposedly. obviously if it worked we wouldn't be here).
-    I have not been able to find the set contained in each Relation object fails to
-    sort itself correctly. In a seperate, one file test I have tried but been unsuccessful
-    in even recreating the issue. In every case that I tried, it works. This includes the case
-    of storing my tuples as pointers in the set. So until I figure that out (as I likely will
-    before I turn in project 4) I'm stuck with manually sorting the tuples before I print them
-    to the output. I don't like it any more than you do. I'm sure it's something super stupid
-    and I'm gonna laugh real long and hard at myself for not getting it.
-
-    I'm compiling with g++, debugging with gdb, and have tested it on a seperate linux server I have running. idk man.
-
-    I also tried changing the < overload operator to accept a reference to a pointer but it no work.
-    I suppose because it's doing comparison for Tuple to Tuple* which isn't even what the set is supposed to do
-    but it doesn't let you define a comparison operator for Tuple* and Tuple* so BRUH idk what to do.
-
-    Okay yeah so the problem is that I'm storing pointers to Tuples instead of tuples themselves.
-    I'm sure I could have done this better but I'm too deep down the pointer train
-    there's no stopping me now
-
-    Yeah I gotta find a way to change how the set's compare function works with it's OWN
-    ELEMENTS AAAUGH.
-
-    Thing is when I did it in another file it worked perfectly fine pointers and all. Maybe I'm
-    just going insane.
-
-    Alright well this works so I'm going to sleep.
+    turns out it's super easy you just needa define a custom compare function for the set.
+    If you're confused about this comment, read the previous commit.
     */
 
-   std::set<Tuple> instances;
-   for(auto instance : this->instances){
-       instances.insert(*instance);
-   }
-
     std::ostringstream result;
-    for (Tuple t : instances){        
-        serializeTuple(result, &t, length);
+    for (Tuple *t : instances){
+        serializeTuple(result, t, length);
         result << std::endl;
     }
     return result.str();
