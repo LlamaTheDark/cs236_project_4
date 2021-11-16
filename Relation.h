@@ -15,6 +15,28 @@ private:
     std::set<Tuple*> instances;
 
     bool containsInstance(Tuple* instance);
+
+    /*
+    Tells you whether or not two tuples can be combined in a join
+    @param ths: the right hand side relation being joined to this relation.
+    @param t1: the tuple of this relation
+    @param t2: the tuple of the rhs relation
+    @param commonSchema: a map linking common columns of rhs and this relation.
+                         A pair consists of <index in rhs relation, index in this relation>
+    @return A boolean. true if the tuples should be combined, false otherwise.
+    */
+    bool canJoin(Relation *rhs, Tuple *t1, Tuple *t2, std::unordered_map<int, int> &commonSchema) const;
+    /*
+    Joins two tuples given specific indices to join for the second tuple
+    @return a new tuple that is the result of joining the two tuples given
+    */
+    static Tuple *joinTuples(Tuple *t1, Tuple *t2, std::vector<int> &t2Indices);
+    /*
+    creates a header from two existing headers given the indices of attributes
+    that should be added form the second header
+    @return a new header that is the result of joining the two headers given
+    */
+    static Header *joinHeaders(Header *h1, Header *h2, std::vector<int> &h2Indices);
 public:
     Relation();
     Relation(std::string name, Header *header);
@@ -25,6 +47,11 @@ public:
     @param instance: the tuple to be added
     */
     void addInstance(Tuple *instance);
+    /*
+    Adds all instances of parameter `r` to the relation from which the function was called.
+    @param r: A pointer to the relation whose instances will be added to this
+    */
+    void performUnion(Relation *r);
 
     /*
     Selects rows that contain a specific value for a given column
@@ -46,6 +73,7 @@ public:
     @return A new relation with all but the specified columns removed.
     */
     Relation *project(const std::set<int> &indices) const;
+    Relation *project(const std::vector<int> &indices) const;
     /*
     @param attributes: A map which maps a pointer to a parameter to an int. Each parameter is
     an attribute that should be added to the header at the specified index. For each index not
@@ -54,11 +82,25 @@ public:
     */
     Relation *rename(std::unordered_map<std::string_view, int> &attributes) const;
 
+    /*
+    Performs natural join (i.e. |x|) on this relation and the relation passed.
+    @param rhs: the right hand side relation to be joined to this relation.
+    @return A new relation which is the result of a natural join between this and rhs.
+    */
+    Relation *join(Relation *rhs) const;
+
     bool isEmpty() const { return instances.empty(); }
-    int getInstanceCount() const { return instances.size(); }
+    int instanceCount() const { return instances.size(); }
+
+    std::string_view getAttribute(int index) { return header->getAttribute(index); }
+    int headerLength() const { return header->getLength(); }
 
     std::string getName() const;
     std::string toString() const;
+    std::ostream &serializeTuple(std::ostream &out, Tuple *t, int length) const;
+
+    std::set<Tuple*>::iterator begin() { return instances.begin(); }
+    std::set<Tuple*>::iterator end()   { return instances.end();   }
 
     friend std::ostream &operator<<(std::ostream &out, const Relation &r);
 };

@@ -15,8 +15,12 @@ public:
     This will interpret all the queries given by the datalog program. It just
     runs evaluatePredicate(Predicate p) for each query.
     */
+
+    void interpretProgram();
+    void evaluateRules();
     void evaluateQueries();
     Relation *evaluatePredicate(Predicate *p);
+    Relation *evaluateRule(Rule *r);
 
     
 };

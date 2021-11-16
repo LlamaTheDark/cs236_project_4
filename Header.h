@@ -15,10 +15,17 @@ public:
 
     /*
     @param index: the index of the attribute whose name is desired
-    @return a pointer to the string containing the attribute's name
+    @return a string_view of the attributes name
     
     */
     std::string_view getAttribute(int index);
+
+    /*
+    @param attribute: the attribute to be found
+    @return the index of the attribute in the attribute vector
+    or -1 if the attribute was not found.
+    */
+    int findAttribute(std::string_view attribute);
 
     unsigned int getLength();
 };

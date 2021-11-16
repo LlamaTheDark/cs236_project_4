@@ -12,4 +12,3 @@ std::string_view Tuple::getValue(int index) const {
 unsigned int Tuple::getLength(){
     return this->values.size();
 }
-

@@ -20,6 +20,14 @@ public:
     void addHeadParameter(Parameter *p);
     void addPredicate(Predicate *p);
 
+    std::vector<Parameter*> *getHeadParameters(){ return headPredicate->getParameters(); }
+    std::string *getHeadId(){ return headPredicate->getId(); }
+
+    // range-based for loop
+    std::vector<Predicate*>::iterator begin();
+    std::vector<Predicate*>::iterator end();
+    // ---
+
     std::string toString() const;
     friend std::ostream &operator<<(std::ostream &out, const Rule &r);
 };

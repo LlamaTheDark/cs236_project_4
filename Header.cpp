@@ -12,6 +12,14 @@ void Header::setAttribute(std::string_view attribute, int index){
 std::string_view Header::getAttribute(int index){
     return attributes.at(index);
 }
+int Header::findAttribute(std::string_view attribute){
+    for(unsigned int i = 0; i < attributes.size(); i++){
+        if(attributes[i] == attribute){
+            return i;
+        }
+    }
+    return -1;
+}
 
 unsigned int Header::getLength(){
     return attributes.size();

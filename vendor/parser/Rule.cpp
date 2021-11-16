@@ -14,6 +14,9 @@ void Rule::addPredicate(Predicate *p){
     predicateList.push_back(p);
 }
 
+std::vector<Predicate*>::iterator Rule::begin(){ return predicateList.begin(); }
+std::vector<Predicate*>::iterator Rule::end(){ return predicateList.end(); }
+
 std::string Rule::toString() const {
     std::ostringstream s;
     s << *headPredicate << " :- ";
@@ -21,7 +24,7 @@ std::string Rule::toString() const {
     for(long unsigned int i = 0; i < predicateList.size()-1; i++){
         s << *(predicateList[i]) << ",";
     }
-    s << *(predicateList[predicateList.size()-1]); // full stop '.' taken care of in DatalogProgram.cpp
+    s << *(predicateList[predicateList.size()-1]) << ".";
     return s.str();
 }
 std::ostream &operator<<(std::ostream &out, const Rule &r){

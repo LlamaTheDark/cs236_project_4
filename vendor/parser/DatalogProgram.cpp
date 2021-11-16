@@ -283,7 +283,7 @@ std::string DatalogProgram::toString() const {
 
     oss << "Rules(" << rules.size() << "):" << std::endl;
     for(auto r : rules){
-        oss << "  " << *r << "." << std::endl;
+        oss << "  " << *r << std::endl;
     }
 
     oss << "Queries(" << queries.size() << "):" << std::endl;
@@ -315,6 +315,7 @@ std::ostream &operator<<(std::ostream &out, const DatalogProgram &dp){
 std::vector<Predicate*> *DatalogProgram::getFacts(){ return &facts; }
 std::vector<Predicate*> *DatalogProgram::getSchemes(){ return &schemes; }
 std::vector<Predicate*> *DatalogProgram::getQueries(){ return &queries; }
+std::vector<Rule *> *DatalogProgram::getRules(){ return &rules; }
 
 // ############################################################################
 // FIRST SETS

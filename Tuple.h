@@ -27,7 +27,8 @@ public:
         return true;
     }
 
-    
+    std::vector<std::string_view>::iterator begin() { return values.begin(); }
+    std::vector<std::string_view>::iterator end() { return values.end(); }
 };
 
 #endif /* TUPLE_H */

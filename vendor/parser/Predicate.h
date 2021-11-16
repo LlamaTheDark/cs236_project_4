@@ -20,7 +20,6 @@ public:
 
     void addParameter(Parameter *p);
 
-
     std::string toString() const;
     friend std::ostream &operator<<(std::ostream &out, const Predicate &p);
     
