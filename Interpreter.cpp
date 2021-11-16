@@ -8,10 +8,10 @@
 #include <set>
 #include <unordered_map>
 
-#define DEVMODE
-void submit(std::string &submission){
+// #define DEVMODE
+void submitQuery(std::string &submission){
 #ifdef DEVMODE
-    if(!FileHelper::write("out/tests/output.txt", submission))
+    if(!FileHelper::write("out/text/output_comp.txt", submission))
         std::cout << "Failed to write file" << std::endl;
 #else
     std::cout << submission;
@@ -56,21 +56,23 @@ void Interpreter::interpretProgram(){
 void Interpreter::evaluateRules(){
     int n = 0;
 
-    while(/* new tuples added */1){
+    bool tuplesAdded = true;
+    while(tuplesAdded){
         for(auto rule : *dp->getRules()){
             std::cout << *rule << std::endl;
-            Relation *r = evaluateRule(rule);
+            tuplesAdded = evaluateRule(rule);
+            // Relation *r = evaluateRule(rule);
             // union r with relation of same name
-            db.getRelation(*rule->getHeadId())->performUnion(r);
+            // tuplesAdded = db.getRelation(*rule->getHeadId())->performUnion(r);
         }
         
         n++;
     }
 
-    std::cout << "\nSchemes populated after " << n << "passes through the Rules." << std::endl;
+    std::cout << "\nSchemes populated after " << n << " passes through the Rules." << std::endl << std::endl;
     
 }
-Relation *Interpreter::evaluateRule(Rule *rule){
+bool Interpreter::evaluateRule(Rule *rule){
     Relation *result;
     Relation *tmp;
     {// first, evaluate all predicates held in the rule
@@ -123,10 +125,7 @@ Relation *Interpreter::evaluateRule(Rule *rule){
     }
     
     // union the renamed relation with the relation of the same name in the database
-    // {
-    //     match->performUnion(result);
-    // }
-    return result;
+    return match->performUnion(result);
 }
 
 void Interpreter::evaluateQueries(){
@@ -149,7 +148,7 @@ void Interpreter::evaluateQueries(){
     // oss << std::endl;
 
     std::string result = oss.str();
-    submit(result);
+    submitQuery(result);
 }
 
 Relation *Interpreter::evaluatePredicate(Predicate *predicate){

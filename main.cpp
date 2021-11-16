@@ -55,7 +55,7 @@ int main(int argc, char **argv){
     datalogProgram->start(lexer->getTokens(), false);
 
     Interpreter *interpreter = new Interpreter(datalogProgram);
-    interpreter->evaluateQueries();
+    interpreter->interpretProgram();
 
 
     delete interpreter;

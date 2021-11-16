@@ -19,12 +19,13 @@ public:
         return values < rhs.values;
     }
     bool operator==(const Tuple &rhs) const {
-        for(unsigned int i = 0; i < values.size(); i++){
-            if(values.at(i) != rhs.getValue(i)){
-                return false;
-            }
-        }
-        return true;
+        return values == rhs.values;
+        // for(unsigned int i = 0; i < values.size(); i++){
+        //     if(values.at(i) != rhs.getValue(i)){
+        //         return false;
+        //     }
+        // }
+        // return true;
     }
 
     std::vector<std::string_view>::iterator begin() { return values.begin(); }

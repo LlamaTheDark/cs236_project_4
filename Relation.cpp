@@ -23,6 +23,8 @@ bool Relation::performUnion(Relation *r){
             serializeTuple(tupleStream, instance, instance->getLength());
             tupleStream << std::endl;
             std::cout << tupleStream.str();
+            
+            tupleStream.str("");
             tupleStream.clear();
 
             result = true;

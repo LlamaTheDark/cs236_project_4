@@ -20,7 +20,11 @@ public:
     void evaluateRules();
     void evaluateQueries();
     Relation *evaluatePredicate(Predicate *p);
-    Relation *evaluateRule(Rule *r);
+
+    /*
+    @return true if new facts were added, false otherwise
+    */
+    bool evaluateRule(Rule *r);
 
     
 };
