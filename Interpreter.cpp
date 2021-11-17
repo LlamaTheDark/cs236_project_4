@@ -56,18 +56,16 @@ void Interpreter::interpretProgram(){
 void Interpreter::evaluateRules(){
     int n = 0;
 
-    bool tuplesAdded = true;
-    while(tuplesAdded){
+    bool tuplesAdded;
+    do{
+        tuplesAdded = false;
         for(auto rule : *dp->getRules()){
             std::cout << *rule << std::endl;
-            tuplesAdded = evaluateRule(rule);
-            // Relation *r = evaluateRule(rule);
-            // union r with relation of same name
-            // tuplesAdded = db.getRelation(*rule->getHeadId())->performUnion(r);
+            if(evaluateRule(rule))
+                tuplesAdded = true;
         }
-        
         n++;
-    }
+    }while(tuplesAdded);
 
     std::cout << "\nSchemes populated after " << n << " passes through the Rules." << std::endl << std::endl;
     
@@ -94,7 +92,7 @@ bool Interpreter::evaluateRule(Rule *rule){
     // project all columns that appear in the head predicate of the rule
     //      first find indices of columns that match the head predicate variable names
     {
-        std::vector<int> indices;
+        std::vector<int> indices; // using a vector so we can reorder the columns
         int count;
 
         for(auto parameter : *rule->getHeadParameters()){
